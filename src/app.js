@@ -1,8 +1,8 @@
 const container = document.getElementById("container");
 const input = document.getElementById("input");
-
-//TODO: crea una funcion que elimine de pantalla la columna que corresponda con el indice introducido en deleteInput
-// si pongo un id que no existe debe mostrar un error
+const inputDelete = document.getElementById("deleteInput");
+// obtenemos los nodos div de container, sin texto
+let hijos = document.getElementById("container").getElementsByTagName("div");
 
 document
   .querySelector("#myForm")
@@ -12,33 +12,53 @@ document.getElementById("button").addEventListener("click", () => {
   //crear el elemento
   let div = document.createElement("div");
   div.setAttribute("class", "col");
-
-  //TODO: CREAR UN HN AL AZAR (H1-H2...H6)
-  div.innerHTML = `<h1>${input.value.toUpperCase()}</h1>`;
+  let random = Math.floor(Math.random() * 6) + 1;
+  // inserta aleatoriamente
+  div.innerHTML = `<h${random}>${input.value.toUpperCase()}</h${random}>`;
   container.appendChild(div);
 });
 
 document.getElementById("deleteButton").addEventListener("click", () => {
-  //comprobar hijos
-  if (container.childNodes.length > 0) {
+  //controlamos que el numero de hijos no sea 0 ni menor
+  if (hijos.length > 0) {
     //eliminar el ultimo
-    //TODO: CREAR LA FUNCIONALIDAD PARA ELIMIANR EL ULTIMO NODO SIN QUE NUNCA DE ERROR
-
-    let columnas = document.querySelectorAll("col");
-    container.removeChild();
+    // la forma de acceder al ultimo es un poco penca pero funciona
+    container.removeChild(hijos[hijos.length - 1]);
   } else {
-    console.log("No hay nadie a quien eliminar");
+    console.error("No hay nadie a quien eliminar");
   }
 });
 
 //crear evento
 input.addEventListener("keyup", ev => {
   if (ev.keyCode == 13) {
-    console.log("Estamos cambiando el evento");
-    //TODO: REFACTORIZAR
-    for (let value of container.childNodes) {
-      console.log(value);
-      value.innerHTML = `<h1>${input.value.toUpperCase()}</h1>`;
+    if (hijos.length < 4) {
+      // creamos elemento con clase col y le asignamos <hn> aleatoria en caso de que las columnas sean
+      // menor de las 4 inicialmente existentes
+      let div = document.createElement("div");
+      div.setAttribute("class", "col");
+      let random = Math.floor(Math.random() * 6) + 1;
+      //adicionalmente he incluido también aquí lo del aleatorio aunque no haga falta
+      div.innerHTML = `<h${random}>${input.value.toUpperCase()}</h${random}>`;
+      container.appendChild(div);
+    }
+    else { // si no, se cambia el contenido html
+      for (let value of hijos) {
+        value.innerHTML = `<h1>${input.value.toUpperCase()}</h1>`;
+      }
+    }
+  }
+
+});
+
+inputDelete.addEventListener("keyup", ev => {
+  if (ev.keyCode == 13) {
+    // tenemos que eliminar mediante un input el elemento que le pasemos
+    if (inputDelete.value <= hijos.length && inputDelete.value < 0) {
+      // Borramos el nodo pasando hijos que son nodos div
+      container.removeChild(hijos[inputDelete.value]);
+    } else if (inputDelete.value > hijos.length) {
+      console.error("Esto no es un nodo que se pueda eliminar");
     }
   }
 });
