@@ -41,23 +41,22 @@ input.addEventListener("keyup", ev => {
       //adicionalmente he incluido también aquí lo del aleatorio aunque no haga falta
       div.innerHTML = `<h${random}>${input.value.toUpperCase()}</h${random}>`;
       container.appendChild(div);
-    }
-    else { // si no, se cambia el contenido html
+    } else {
+      // si no, se cambia el contenido html
       for (let value of hijos) {
         value.innerHTML = `<h1>${input.value.toUpperCase()}</h1>`;
       }
     }
   }
-
 });
 
 inputDelete.addEventListener("keyup", ev => {
   if (ev.keyCode == 13) {
     // tenemos que eliminar mediante un input el elemento que le pasemos
-    if (inputDelete.value <= hijos.length && inputDelete.value < 0) {
+    if (inputDelete.value <= hijos.length && inputDelete.value >= 0) {
       // Borramos el nodo pasando hijos que son nodos div
       container.removeChild(hijos[inputDelete.value]);
-    } else if (inputDelete.value > hijos.length) {
+    } else if (inputDelete.value > hijos.length || inputDelete.value < 0) {
       console.error("Esto no es un nodo que se pueda eliminar");
     }
   }
